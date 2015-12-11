@@ -1,59 +1,45 @@
 class MasterMind
-  #@@colors = %w(red blue green yellow purple white) #stores color options
   @@colors = {r:"red",b:"blue",g:"green",y:"yellow",p:"purple",w:"white"}
-  def initialize
-  end
-end
+  attr_reader :computer_choice, :user_choice
 
-#operates computer
-class ComputerMind < MasterMind
-  attr_reader :computer_choice
-
-  #Object will have instance variable -- an array of 4 random colors
+#An object will have two instance variables
+#*computer's choice
+#*user's choice
   def initialize
     @computer_choice = self.computer_selection
+    p @computer_choice
+    self.user_selection
+    p @user_choice
   end
 
-  #Returns an array of *4* randomly picked colors
+#Returns an array of *4* randomly picked colors (computer's choice)
   def computer_selection
+    #@@colors.keys.shuffle.take(4) not useful. Takes only uniq values
     computer_colors = []
     4.times { computer_colors << @@colors.keys.sample }
     computer_colors
   end
-  # #Compares computer's and user's arrays
-  # def compare(user_set)
-  #   @computer_choice.each do |color|
 
-  #   end
-  # end
-end
-
-class HumanMind < MasterMind
-  attr_accessor :user_choice
-  #Object will have instance variable, an array, which will be mutable by user
-  def initialize
+#Takes user's guess
+  def user_selection
     @user_choice = gets.chomp.split("").map(&:to_sym)
   end
-  #============ не забудь дописати перевырку на кількість і валідність
 
+#Compares user's input with computer's choice, and returns hints to the user
+  def compare
+    number = @computer_choice.length - (@computer_choice - @user_choice).length
+    correct = @user_choice.zip(@computer_choice).map{|pair| pair[0]<=>pair[1]}
+    position = correct.count(0)
+    p position, number
+  end
 
-  def compare(comp_set) #c_set is an obj of CompMind
-    # correct_number = 0
-    # @user_choice.uniq.each do |color|
-    #   if comp_set.computer_choice.include?(color)
-    #     correct_number+=1
-    #   end
-    # end
-    comp_choice = comp_set.computer_choice #gets ComputerMind::@computer_choice
-    correct_number = comp_choice.length - (comp_choice - @user_choice).length
-    correctness = @user_choice.zip(comp_choice).map{|pair| pair[0]<=>pair[1]}
-    correct_position = correctness.count(0)
-    p correct_position, correct_number
+  def next_guess
+    11.times do
+      user_choice
+      compare()
+    end
   end
 end
 
-p a = ComputerMind.new
-p b = HumanMind.new
-
-p b.compare(a)
-
+a = MasterMind.new
+a.compare
