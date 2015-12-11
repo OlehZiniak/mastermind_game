@@ -6,10 +6,9 @@ class MasterMind
 #*computer's choice
 #*user's choice
   def initialize
-    @computer_choice = self.computer_selection
+    @computer_choice = [:b, :b, :b, :r]#self.computer_selection
     p @computer_choice
     self.user_selection
-    p @user_choice
   end
 
 #Returns an array of *4* randomly picked colors (computer's choice)
@@ -27,19 +26,26 @@ class MasterMind
 
 #Compares user's input with computer's choice, and returns hints to the user
   def compare
-    number = @computer_choice.length - (@computer_choice - @user_choice).length
     correct = @user_choice.zip(@computer_choice).map{|pair| pair[0]<=>pair[1]}
+    number = 0
+    @user_choice.each do |color|
+      number+=1 if @computer_choice.include?(color)
+    end
     position = correct.count(0)
-    p position, number
+    puts "\nNubmer of geussed positions is ------ #{position}"
+    puts "Total number of guessed colors is --- #{number}\n"
+    puts ("Wow! You've won!"&& exit) if position == 4
   end
 
   def next_guess
     11.times do
-      user_choice
-      compare()
+      user_selection
+      compare
     end
+    puts "\nSORRY YOU LOOSE :("
   end
 end
 
-a = MasterMind.new
-a.compare
+game = MasterMind.new
+game.compare
+game.next_guess
