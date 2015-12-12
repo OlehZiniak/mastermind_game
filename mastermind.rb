@@ -1,14 +1,17 @@
 class MasterMind
   @@colors = {r:"red",b:"blue",g:"green",y:"yellow",p:"purple",w:"white"}
-  attr_reader :computer_choice, :user_choice
+  attr_reader :computer_choice, :user_choice, :position, :turns
+
 
 #An object will have two instance variables
 #*computer's choice
 #*user's choice
   def initialize
-    @computer_choice = [:b, :b, :b, :r]#self.computer_selection
+    @computer_choice = self.computer_selection
     p @computer_choice
     self.user_selection
+    @position = 0
+    @turns = 3
   end
 
 #Returns an array of *4* randomly picked colors (computer's choice)
@@ -26,26 +29,49 @@ class MasterMind
 
 #Compares user's input with computer's choice, and returns hints to the user
   def compare
+    @turns -= 1
     correct = @user_choice.zip(@computer_choice).map{|pair| pair[0]<=>pair[1]}
     number = 0
+    bufer = @computer_choice.dup #so @computer_choice stays unmodified
     @user_choice.each do |color|
-      number+=1 if @computer_choice.include?(color)
+      if bufer.include?(color)
+        number+=1
+        bufer.delete_at(bufer.index(color))
+      end
     end
-    position = correct.count(0)
-    puts "\nNubmer of geussed positions is ------ #{position}"
-    puts "Total number of guessed colors is --- #{number}\n"
-    puts ("Wow! You've won!"&& exit) if position == 4
+    @position = correct.count(0)
+    puts "\n Nubmer of geussed positions is ------ #{@position}"
+    puts " Total number of guessed colors is --- #{number}\n"
+    puts "\n THE GAME IS ENDED" if end_of_game?
   end
 
   def next_guess
-    11.times do
-      user_selection
-      compare
+    user_selection
+    compare
+    #puts "\nSORRY YOU LOOSE :("
+  end
+
+  def end_of_game?
+    if @position == 4
+      #puts "\n CONGRATULATIONS YOU WON!"
+      return true
+    elsif @turns == 0
+      #puts "\n SORRY, NO MORE MOVES LEFT, YOU LOOSE"
+      return true
+    else
+      return false
     end
-    puts "\nSORRY YOU LOOSE :("
   end
 end
 
 game = MasterMind.new
 game.compare
-game.next_guess
+until game.end_of_game?
+  game.next_guess
+end
+
+if game.position == 4
+  puts "\n CONGRATULATIONS YOU WON!\n"
+elsif game.turns == 0
+  puts "\n SORRY, NO MORE MOVES LEFT, YOU LOOSE"
+end
