@@ -16,7 +16,6 @@ class MasterMind
 
 #Returns an array of *4* randomly picked colors (computer's choice)
   def computer_selection
-    #@@colors.keys.shuffle.take(4) not useful. Takes only uniq values
     computer_colors = []
     4.times { computer_colors << @@colors.keys.sample }
     computer_colors
@@ -45,22 +44,15 @@ class MasterMind
     puts "\n THE GAME IS ENDED" if end_of_game?
   end
 
+#Takes new input from user and sends it to #.compare method
   def next_guess
     user_selection
     compare
-    #puts "\nSORRY YOU LOOSE :("
   end
 
+#Checks if the code is guessed or no more moves left
   def end_of_game?
-    if @position == 4
-      #puts "\n CONGRATULATIONS YOU WON!"
-      return true
-    elsif @turns == 0
-      #puts "\n SORRY, NO MORE MOVES LEFT, YOU LOOSE"
-      return true
-    else
-      return false
-    end
+    return (@position == 4 || @turns == 0) ? true : false
   end
 end
 
