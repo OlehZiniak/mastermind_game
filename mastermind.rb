@@ -8,10 +8,9 @@ class MasterMind
 #*user's choice
   def initialize
     @computer_choice = self.computer_selection
-    p @computer_choice
-    self.user_selection
+    @user_choice = self.user_selection
     @position = 0
-    @turns = 3
+    @turns = 12
   end
 
 #Returns an array of *4* randomly picked colors (computer's choice)
@@ -23,7 +22,7 @@ class MasterMind
 
 #Takes user's guess
   def user_selection
-    @user_choice = gets.chomp.split("").map(&:to_sym)
+    gets.chomp.split("").map(&:to_sym)
   end
 
 #Compares user's input with computer's choice, and returns hints to the user
@@ -55,15 +54,34 @@ class MasterMind
     return (@position == 4 || @turns == 0) ? true : false
   end
 end
+#===============================================================================
+puts "\n   Hello, this is MasterMind, a game where one player has to guess a secret code of four
+colors of another player within 12 turns. Each turn you get some feedback about how good
+your guess was -- whether it was exactly correct or just the correct colors in the wrong
+place."
+puts "\nCode elements:
+r -> red         b -> blue        g -> green
+y -> yellow      p -> purple      w -> white"
+puts "For example if the code is 'blue green white blue'"
+puts "it must be resembled as  ->  'bgwb'"
+puts "\nPlease select if you want to a codebreaker(1) or a codemaker(2)"
 
-game = MasterMind.new
-game.compare
-until game.end_of_game?
-  game.next_guess
-end
+gamemode = gets.chomp.to_i
+if gamemode == 1
+  puts "\nComputer picked a secret code. Make your guess."
+  game = MasterMind.new
+  game.compare
+  until game.end_of_game?
+    game.next_guess
+  end
+  if game.position == 4
+    puts "\n CONGRATULATIONS YOU WON!\n"
+  elsif game.turns == 0
+    puts "\n SORRY, NO MORE MOVES LEFT, YOU LOOSE"
+  end
 
-if game.position == 4
-  puts "\n CONGRATULATIONS YOU WON!\n"
-elsif game.turns == 0
-  puts "\n SORRY, NO MORE MOVES LEFT, YOU LOOSE"
+elsif gamemode == 2
+
+else
+  puts "INCORRECT INPUT! Please enter 1 or 2"
 end
