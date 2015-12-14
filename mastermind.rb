@@ -6,7 +6,8 @@ class MasterMind
 #An object will have two instance variables
 #*computer's choice
 #*user's choice
-  def initialize
+  def initialize(mode)
+    @mode = mode
     @computer_choice = self.computer_selection
     @user_choice = self.user_selection
     @position = 0
@@ -69,7 +70,7 @@ puts "\nPlease select if you want to a codebreaker(1) or a codemaker(2)"
 gamemode = gets.chomp.to_i
 if gamemode == 1
   puts "\nComputer picked a secret code. Make your guess."
-  game = MasterMind.new
+  game = MasterMind.new(1)
   game.compare
   until game.end_of_game?
     game.next_guess
@@ -81,6 +82,7 @@ if gamemode == 1
   end
 
 elsif gamemode == 2
+  game = MasterMind.new(2)
 
 else
   puts "INCORRECT INPUT! Please enter 1 or 2"
