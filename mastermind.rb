@@ -23,7 +23,7 @@ class MasterMind
 
 #Takes user's guess
   def user_selection
-    gets.chomp.split("").map(&:to_sym)
+    @user_choice = gets.chomp.split("").map(&:to_sym)
   end
 
 #Compares user's input with computer's choice, and returns hints to the user
